@@ -97,7 +97,44 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 TAX_RATE=0.0
 ```
 
-### 3. Database Migration & CSV Catalog Import
+### 3. Slack Incoming Webhook Setup
+
+QuotePilot uses a **Slack Incoming Webhook** — the simplest, most reliable integration for one-way internal notifications. No OAuth, no Events API, no Socket Mode required.
+
+#### Create the webhook (one-time, ~2 minutes):
+
+1. Go to **[https://api.slack.com/apps](https://api.slack.com/apps)** and click **"Create New App"** → **"From scratch"**.
+2. Name the app (e.g. `Greenscape QuotePilot`) and select your workspace.
+3. In the left sidebar, click **"Incoming Webhooks"** and toggle **"Activate Incoming Webhooks"** to **On**.
+4. Click **"Add New Webhook to Workspace"**, select the channel to receive approval notifications (e.g. `#proposals`), and click **"Allow"**.
+5. Copy the generated **Webhook URL** — it looks like:
+   ```
+   https://hooks.slack.com/services/T.../B.../xxxxxxxxxxxxxxxxxxxxxx
+   ```
+6. Paste it into your `.env.local`:
+   ```ini
+   SLACK_WEBHOOK_URL=https://hooks.slack.com/services/T.../B.../xxxxxxxxxxxxxxxxxxxxxx
+   ```
+
+#### What the notification looks like:
+
+When Marcus clicks **Approve**, a Block Kit message is posted to the channel containing:
+- 🌿 Customer name
+- 💰 Calculated proposal total (formatted as USD)
+- 📍 Project address
+- ⚠️ 3D Render flag (`CARLOS RENDER REQUIRED` if total ≥ $30,000)
+- 🔑 Proposal ID
+- 🔗 Direct link to the proposal in the app
+
+#### Failure behaviour:
+
+If the Slack webhook fails (network error, invalid URL, Slack outage), the proposal **remains `APPROVED`** — it never transitions to `FAILED`. The error is recorded in `proposals.slack_error` and an `SLACK_FAILED` audit event is written to `approval_events`. The webhook URL is **server-side only** and is never exposed to the browser.
+
+> **Note:** Leaving `SLACK_WEBHOOK_URL` blank or set to the placeholder value causes the notification to be silently skipped (treated as a soft-success for demo/local runs).
+
+---
+
+### 4. Database Migration & CSV Catalog Import
 
 Run migrations in Supabase SQL Editor or push via CLI:
 1. Execute `supabase/migrations/0001_initial_schema.sql`
