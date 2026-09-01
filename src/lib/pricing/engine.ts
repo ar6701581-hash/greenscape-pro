@@ -36,8 +36,10 @@ export function calculateLineTotal(
     throw new Error(`Quantity must be strictly positive (> 0). Sourced quantity: ${quantity}`);
   }
 
-  // Exact decimal pricing multiplication
-  const lineTotal = Math.round((item.unit_price * quantity) * 100) / 100;
+  // Exact integer cents pricing multiplication to eliminate IEEE floating point drift
+  const unitPriceCents = Math.round(item.unit_price * 100);
+  const lineTotalCents = Math.round(unitPriceCents * quantity);
+  const lineTotal = lineTotalCents / 100;
 
   let outOfRange = false;
   let outOfRangeNote: string | null = null;
@@ -71,12 +73,19 @@ export function calculateProposalTotals(
   lineItems: Array<{ line_total: number }>,
   taxRate: number = 0.0
 ): CalculatedProposalTotals {
-  const subtotal = Math.round(lineItems.reduce((sum, item) => sum + item.line_total, 0) * 100) / 100;
-  const taxAmount = Math.round((subtotal * taxRate) * 100) / 100;
-  const totalAmount = Math.round((subtotal + taxAmount) * 100) / 100;
+  const subtotalCents = lineItems.reduce(
+    (sum, item) => sum + Math.round(item.line_total * 100),
+    0
+  );
+  const taxCents = Math.round(subtotalCents * taxRate);
+  const totalCents = subtotalCents + taxCents;
 
-  // Authoritative deterministic $30,000 rule for Carlos Render
-  const renderRequired = totalAmount > 30000;
+  const subtotal = subtotalCents / 100;
+  const taxAmount = taxCents / 100;
+  const totalAmount = totalCents / 100;
+
+  // Authoritative deterministic $30,000 threshold (>= $30,000) for Carlos Render
+  const renderRequired = totalAmount >= 30000;
   const renderFlagNote = renderRequired ? 'CARLOS RENDER REQUIRED' : null;
 
   return {

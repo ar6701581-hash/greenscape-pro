@@ -66,13 +66,33 @@ describe('Deterministic Pricing Engine Invariants', () => {
     expect(() => calculateLineTotal(dummyItem, -50, 0.9, 'pavers')).toThrow();
   });
 
-  it('authoritatively triggers Carlos Render flag when total > $30,000', () => {
-    const totalsUnder = calculateProposalTotals([{ line_total: 25000 }], 0);
+  it('authoritatively triggers Carlos Render flag when total reaches or exceeds $30,000 (boundary testing)', () => {
+    // $29,999.99 → renderRequired: false
+    const totalsUnder = calculateProposalTotals([{ line_total: 29999.99 }], 0);
+    expect(totalsUnder.totalAmount).toBe(29999.99);
     expect(totalsUnder.renderRequired).toBe(false);
+    expect(totalsUnder.renderFlagNote).toBeNull();
 
-    const totalsOver = calculateProposalTotals([{ line_total: 35000 }], 0);
+    // Exactly $30,000.00 → renderRequired: true
+    const totalsExact = calculateProposalTotals([{ line_total: 30000.00 }], 0);
+    expect(totalsExact.totalAmount).toBe(30000.00);
+    expect(totalsExact.renderRequired).toBe(true);
+    expect(totalsExact.renderFlagNote).toBe('CARLOS RENDER REQUIRED');
+
+    // $30,000.01 → renderRequired: true
+    const totalsOver = calculateProposalTotals([{ line_total: 30000.01 }], 0);
+    expect(totalsOver.totalAmount).toBe(30000.01);
     expect(totalsOver.renderRequired).toBe(true);
     expect(totalsOver.renderFlagNote).toBe('CARLOS RENDER REQUIRED');
+  });
+
+  it('handles multiple decimal items with integer cents precision without IEEE float artifacts', () => {
+    // 3 items with fractional values: 19.99 * 3 = 59.97
+    const line1 = calculateLineTotal({ ...dummyItem, unit_price: 19.99 }, 3, 1.0, 'test item');
+    expect(line1.line_total).toBe(59.97);
+
+    const totals = calculateProposalTotals([{ line_total: 0.10 }, { line_total: 0.20 }], 0);
+    expect(totals.totalAmount).toBe(0.30);
   });
 });
 

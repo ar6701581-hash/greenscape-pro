@@ -4,6 +4,9 @@ import { getPricingItemById } from '@/lib/pricing/lookup';
 import { calculateLineTotal, calculateProposalTotals } from '@/lib/pricing/engine';
 import { logAuditEvent } from '@/lib/proposals/audit';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
     const proposalId = params.id;

@@ -121,7 +121,11 @@ export default function ProposalDetailPage({ params }: { params: { id: string } 
       )}
 
       {/* Render Required Prominent Flag */}
-      <RenderRequiredFlag required={proposal.render_required} note={proposal.render_flag_note} />
+      <RenderRequiredFlag
+        required={proposal.render_required}
+        note={proposal.render_flag_note}
+        unresolvedCount={unresolvedClarificationCount}
+      />
 
       {/* Proposal Header Banner */}
       <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -138,12 +142,17 @@ export default function ProposalDetailPage({ params }: { params: { id: string } 
         {/* Total & Server Approval Button */}
         <div className="flex items-center gap-6">
           <div className="text-right">
-            <div className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Calculated Total</div>
+            <div className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Current Calculated Total</div>
             <div className="text-3xl font-black text-emerald-700">
               ${(proposal.total_amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </div>
+            {unresolvedClarificationCount > 0 && (
+              <div className="text-xs text-amber-700 font-medium mt-0.5">
+                Excludes {unresolvedClarificationCount} unresolved scope {unresolvedClarificationCount === 1 ? 'item' : 'items'}
+              </div>
+            )}
             {proposal.tax_amount > 0 && (
-              <div className="text-[11px] text-gray-400">Includes ${(proposal.tax_amount).toFixed(2)} tax</div>
+              <div className="text-[11px] text-gray-400 mt-0.5">Includes ${(proposal.tax_amount).toFixed(2)} tax</div>
             )}
           </div>
 

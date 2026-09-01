@@ -29,19 +29,45 @@ export function StatusBadge({ status }: { status: string }) {
   );
 }
 
-export function RenderRequiredFlag({ required, note }: { required: boolean; note?: string | null }) {
+export function RenderRequiredFlag({
+  required,
+  note,
+  unresolvedCount = 0
+}: {
+  required: boolean;
+  note?: string | null;
+  unresolvedCount?: number;
+}) {
   if (!required) return null;
 
+  const renderReady = unresolvedCount === 0;
+
   return (
-    <div className="bg-rose-600 text-white font-bold text-sm px-4 py-3 rounded-lg shadow-md flex items-center justify-between border-2 border-rose-700">
-      <div className="flex items-center space-x-2">
-        <span className="text-xl">⚠️</span>
+    <div className="bg-rose-900/90 text-white font-medium text-sm px-5 py-3.5 rounded-xl shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-2 border-rose-700">
+      <div className="flex items-center space-x-3">
+        <span className="text-2xl">⚠️</span>
         <div>
-          <div className="uppercase tracking-wider">Carlos Render Required</div>
-          <div className="text-xs font-normal text-rose-100">{note || 'Calculated proposal total exceeds $30,000 threshold. Flagged for review.'}</div>
+          <div className="font-extrabold uppercase tracking-wider text-rose-100 flex items-center gap-2">
+            <span>Render Required: Yes</span>
+            <span className="text-xs bg-rose-800 px-2 py-0.5 rounded text-rose-200">($30k+ Threshold)</span>
+          </div>
+          <div className="text-xs text-rose-200 mt-0.5">
+            {note || 'Calculated proposal total reaches or exceeds $30,000 threshold.'}
+          </div>
         </div>
       </div>
-      <span className="text-xs bg-rose-800 px-2.5 py-1 rounded uppercase tracking-wide">Internal Flag</span>
+      <div className="flex items-center gap-2 font-bold text-xs bg-rose-950/80 px-3 py-2 rounded-lg border border-rose-800/60 self-start sm:self-auto">
+        <span>Render Ready:</span>
+        {renderReady ? (
+          <span className="text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700">
+            Yes ✓
+          </span>
+        ) : (
+          <span className="text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-700">
+            No — {unresolvedCount} scope clarification{unresolvedCount > 1 ? 's' : ''} remain
+          </span>
+        )}
+      </div>
     </div>
   );
 }
