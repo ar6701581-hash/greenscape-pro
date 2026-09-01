@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-interface LineItem {
+export interface LineItem {
   id: string;
   name: string;
   category: string;

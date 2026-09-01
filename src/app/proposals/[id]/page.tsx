@@ -1,24 +1,37 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { StatusBadge, RenderRequiredFlag } from '@/components/proposals/StatusBadge';
-import { LineItemEditor } from '@/components/proposals/LineItemEditor';
-import { ClarificationPanel } from '@/components/proposals/ClarificationPanel';
-import { AuditTimeline } from '@/components/proposals/AuditTimeline';
+import { LineItemEditor, LineItem } from '@/components/proposals/LineItemEditor';
+import { ClarificationPanel, ClarificationItem } from '@/components/proposals/ClarificationPanel';
+import { AuditTimeline, AuditEvent } from '@/components/proposals/AuditTimeline';
+
+interface ProposalDetail {
+  id: string;
+  version: number;
+  status: string;
+  total_amount: number;
+  tax_amount: number;
+  render_required: boolean;
+  render_flag_note?: string;
+  project_summary?: string;
+  leads?: { name?: string; address?: string };
+  site_walks?: { raw_notes?: string };
+}
 
 export default function ProposalDetailPage({ params }: { params: { id: string } }) {
   const proposalId = params.id;
 
-  const [proposal, setProposal] = useState<any>(null);
-  const [lineItems, setLineItems] = useState<any[]>([]);
-  const [clarifications, setClarifications] = useState<any[]>([]);
-  const [auditEvents, setAuditEvents] = useState<any[]>([]);
+  const [proposal, setProposal] = useState<ProposalDetail | null>(null);
+  const [lineItems, setLineItems] = useState<LineItem[]>([]);
+  const [clarifications, setClarifications] = useState<ClarificationItem[]>([]);
+  const [auditEvents, setAuditEvents] = useState<AuditEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [approving, setApproving] = useState(false);
   const [actionMsg, setActionMsg] = useState<{ type: 'success' | 'warning' | 'error'; text: string } | null>(null);
 
-  const fetchProposalData = async () => {
+  const fetchProposalData = useCallback(async () => {
     try {
       const res = await fetch(`/api/proposals/${proposalId}`);
       if (!res.ok) throw new Error('Proposal not found');
@@ -33,11 +46,11 @@ export default function ProposalDetailPage({ params }: { params: { id: string } 
     } finally {
       setLoading(false);
     }
-  };
+  }, [proposalId]);
 
   useEffect(() => {
     fetchProposalData();
-  }, [proposalId]);
+  }, [fetchProposalData]);
 
   const handleApprove = async () => {
     if (!proposal) return;
@@ -161,7 +174,7 @@ export default function ProposalDetailPage({ params }: { params: { id: string } 
       {/* Site Walk Raw Notes (Collapsible View) */}
       <details className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm text-sm">
         <summary className="font-bold text-gray-800 cursor-pointer select-none flex justify-between items-center">
-          <span>View Marcus's Original Raw Site-Walk Notes</span>
+          <span>View Marcus&apos;s Original Raw Site-Walk Notes</span>
           <span className="text-xs text-gray-400 font-normal">Click to expand</span>
         </summary>
         <div className="mt-3 p-3 bg-gray-50 rounded-lg text-xs font-mono text-gray-700 whitespace-pre-wrap border border-gray-100">

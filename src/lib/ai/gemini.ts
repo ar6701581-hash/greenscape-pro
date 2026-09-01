@@ -1,10 +1,10 @@
-import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
+import { GoogleGenerativeAI, SchemaType, ResponseSchema } from '@google/generative-ai';
 
 const apiKey = process.env.GEMINI_API_KEY || 'placeholder-key-for-build';
 const genAI = new GoogleGenerativeAI(apiKey);
 
 // Gemini OpenAPI-style Schema definition matching ExtractionOutputSchema
-const geminiResponseSchema = {
+const geminiResponseSchema: ResponseSchema = {
   type: SchemaType.OBJECT,
   properties: {
     project_summary: { type: SchemaType.STRING },
@@ -48,7 +48,7 @@ export function getGeminiModel() {
     model: 'gemini-2.0-flash',
     generationConfig: {
       responseMimeType: 'application/json',
-      responseSchema: geminiResponseSchema as any,
+      responseSchema: geminiResponseSchema,
       temperature: 0.1,
       maxOutputTokens: 4096
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface AuditEvent {
+export interface AuditEvent {
   id: string;
   action: string;
   actor: string;

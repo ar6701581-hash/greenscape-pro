@@ -7,7 +7,7 @@ export async function logAuditEvent(
   previousStatus: string | null = null,
   newStatus: string | null = null,
   notes: string | null = null,
-  payload: Record<string, any> | null = null
+  payload: Record<string, unknown> | null = null
 ): Promise<void> {
   if (!proposalId) return;
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-interface ClarificationItem {
+export interface ClarificationItem {
   id: string;
   original_extracted_name: string;
   question: string;

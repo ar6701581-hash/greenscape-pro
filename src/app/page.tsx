@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { StatusBadge, RenderRequiredFlag } from '@/components/proposals/StatusBadge';
+import { StatusBadge } from '@/components/proposals/StatusBadge';
 
 interface ProposalSummary {
   id: string;
@@ -85,7 +85,7 @@ export default function DashboardPage() {
           <div className="p-12 text-center text-gray-400 text-sm">Loading operations pipeline...</div>
         ) : proposals.length === 0 ? (
           <div className="p-12 text-center text-gray-400 text-sm">
-            No proposals generated yet. Click <span className="font-semibold text-emerald-700">"Create New Proposal"</span> to process your first site-walk notes.
+            No proposals generated yet. Click <span className="font-semibold text-emerald-700">&quot;Create New Proposal&quot;</span> to process your first site-walk notes.
           </div>
         ) : (
           <div className="overflow-x-auto">

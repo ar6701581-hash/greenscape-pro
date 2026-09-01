@@ -38,7 +38,7 @@ export function RenderRequiredFlag({ required, note }: { required: boolean; note
         <span className="text-xl">⚠️</span>
         <div>
           <div className="uppercase tracking-wider">Carlos Render Required</div>
-          <div className="text-xs font-normal text-rose-100">Calculated proposal total exceeds $30,000 threshold. Flagged for review.</div>
+          <div className="text-xs font-normal text-rose-100">{note || 'Calculated proposal total exceeds $30,000 threshold. Flagged for review.'}</div>
         </div>
       </div>
       <span className="text-xs bg-rose-800 px-2.5 py-1 rounded uppercase tracking-wide">Internal Flag</span>

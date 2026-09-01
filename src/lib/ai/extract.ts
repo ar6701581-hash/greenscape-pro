@@ -45,7 +45,6 @@ export async function extractScopeFromNotes(
   const model = getGeminiModel();
 
   let rawResponseText = '';
-  let isRetry = false;
 
   try {
     const result = await model.generateContent({
@@ -66,7 +65,6 @@ export async function extractScopeFromNotes(
     };
   } catch (firstError) {
     console.warn('⚠️ First Gemini extraction attempt failed or returned invalid JSON schema. Retrying once...', firstError);
-    isRetry = true;
 
     try {
       const retryResult = await model.generateContent({

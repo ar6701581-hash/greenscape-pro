@@ -61,7 +61,7 @@ export default function NewProposalPage() {
     setLoading(true);
 
     try {
-      const payload: any = {
+      const payload: Record<string, unknown> = {
         rawNotes,
         leadId: isNewLead ? null : selectedLeadId
       };
@@ -99,7 +99,7 @@ export default function NewProposalPage() {
       <div className="border-b border-gray-200 pb-4">
         <h1 className="text-2xl font-black text-gray-900">Create New Proposal</h1>
         <p className="text-xs text-gray-500 mt-1">
-          Paste Marcus's raw site-walk notes. Gemini AI will interpret scope and match catalog items. Pricing is computed deterministically.
+          Paste Marcus&apos;s raw site-walk notes. Gemini AI will interpret scope and match catalog items. Pricing is computed deterministically.
         </p>
       </div>
 
