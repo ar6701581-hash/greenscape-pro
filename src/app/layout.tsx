@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { AppErrorBoundary } from '@/components/ui/AppErrorBoundary';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: 'Greenscape Pro — AI Proposal & Quote Drafting Agent',
@@ -14,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <body className="bg-slate-50 text-slate-900 antialiased font-sans flex min-h-screen">
         <Sidebar />
         <main className="flex-1 overflow-y-auto">

@@ -54,7 +54,8 @@ export async function extractScopeFromNotes(
     });
 
     rawResponseText = result.response.text();
-    const jsonParsed = JSON.parse(rawResponseText);
+    const cleanedText = rawResponseText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+    const jsonParsed = JSON.parse(cleanedText);
     const validatedOutput = ExtractionOutputSchema.parse(jsonParsed);
 
     return {
@@ -73,7 +74,7 @@ export async function extractScopeFromNotes(
             role: 'user',
             parts: [
               {
-                text: `${fullSystemPrompt}\n\nATTENTION: Previous attempt failed schema validation. Output strictly valid JSON conforming to schema.\n\n${userPrompt}`
+                text: `${fullSystemPrompt}\n\nATTENTION: Previous attempt failed schema validation or returned malformed JSON. Output strictly valid JSON conforming to schema without truncation or Markdown backticks.\n\n${userPrompt}`
               }
             ]
           }
@@ -81,7 +82,8 @@ export async function extractScopeFromNotes(
       });
 
       rawResponseText = retryResult.response.text();
-      const retryJsonParsed = JSON.parse(rawResponseText);
+      const cleanedRetryText = rawResponseText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+      const retryJsonParsed = JSON.parse(cleanedRetryText);
       const retryValidatedOutput = ExtractionOutputSchema.parse(retryJsonParsed);
 
       return {

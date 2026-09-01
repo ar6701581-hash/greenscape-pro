@@ -35,7 +35,7 @@ export function Sidebar() {
       <div className="pt-6 border-t border-slate-800 text-[11px] text-slate-500 space-y-1">
         <div>Operator: Marcus Tate</div>
         <div>Mode: Internal Operations</div>
-        <div>Model: Gemini 2.0 Flash</div>
+        <div>Model: Gemini 3.6 Flash</div>
       </div>
     </aside>
   );

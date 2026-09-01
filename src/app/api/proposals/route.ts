@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/server';
 import { fetchActiveCatalogManifest, getPricingItemById } from '@/lib/pricing/lookup';
 import { extractScopeFromNotes } from '@/lib/ai/extract';
+import { GEMINI_MODEL_NAME } from '@/lib/ai/gemini';
 import { validateInputNotes, applyExtractionGuardrails } from '@/lib/proposals/guardrails';
 import { calculateLineTotal, calculateProposalTotals } from '@/lib/pricing/engine';
 import { logAuditEvent } from '@/lib/proposals/audit';
@@ -89,7 +90,7 @@ export async function POST(req: Request) {
     await supabaseAdmin.from('ai_extractions').insert({
       proposal_id: proposal.id,
       site_walk_id: siteWalk.id,
-      model: 'gemini-2.0-flash',
+      model: GEMINI_MODEL_NAME,
       prompt_version: 'v1.0',
       raw_response: { text: rawResponseText },
       parsed_scope: output,

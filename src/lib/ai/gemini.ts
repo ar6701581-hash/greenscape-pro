@@ -43,14 +43,16 @@ const geminiResponseSchema: ResponseSchema = {
   required: ["project_summary", "scope_items", "missing_information", "general_clarification_questions", "render_likely_required"]
 };
 
+export const GEMINI_MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
+
 export function getGeminiModel() {
   return genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
+    model: GEMINI_MODEL_NAME,
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema: geminiResponseSchema,
       temperature: 0.1,
-      maxOutputTokens: 4096
+      maxOutputTokens: 8192
     }
   });
 }

@@ -23,7 +23,7 @@ If asked: *"How do you know the AI didn't invent a $12,000 price?"*
 | **Language** | TypeScript | Zod validation safety & typed DB queries |
 | **Styling** | Tailwind CSS v3 | Utility-first responsive operational UI |
 | **Database** | Supabase (PostgreSQL) | Persistent storage with RLS, foreign keys, and indexes |
-| **AI Provider** | Google Gemini 2.0 Flash | Native JSON schema enforcement (`responseMimeType: 'application/json'`) |
+| **AI Provider** | Google Gemini 3.6 Flash | Native JSON schema enforcement (`responseMimeType: 'application/json'`) |
 | **Validation** | Zod | Runtime schema validation of AI extractions |
 | **Integration** | Slack Incoming Webhook | Fail-safe proposal approval notification |
 | **Testing** | Vitest | Invariant unit tests for state machine & pricing engine |
@@ -123,7 +123,7 @@ npx vitest run
 
 ## 💰 Cost Analysis per Proposal Generation
 
-- **Selected Model:** `gemini-2.0-flash`
+- **Selected Model:** `gemini-3.6-flash` (configurable via `GEMINI_MODEL` env var)
 - **Input Tokens per Proposal:** ~5,000–7,000 tokens (system prompt with catalog manifest + site walk notes)
 - **Output Tokens per Proposal:** ~800–1,500 tokens (structured JSON extraction)
 - **Cost per Proposal:** ~$0.001–$0.002 (under 0.2 cents)
